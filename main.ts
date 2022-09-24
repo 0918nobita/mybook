@@ -25,19 +25,55 @@ const fontSize = 12;
 const color = rgb(0, 0, 0);
 
 page1.drawText("4", {
-  x: 20,
-  y: 20,
-  font,
+  x: 12,
+  y: 10,
   size: fontSize,
+  font,
   color,
 });
-page1.drawText("四則演算", {
-  x: 20,
-  y: height - 20 - fontSize,
+const titleFontSize = 20;
+page1.drawText("２月　February", {
+  x: 25,
+  y: height - 25 - titleFontSize,
   font,
-  size: fontSize,
+  size: titleFontSize,
   color,
 });
+const calendarHeight = height - 100;
+page1.drawRectangle({
+  x: 25,
+  y: 25,
+  width: width / 2 - 25,
+  height: calendarHeight,
+  borderWidth: 1,
+  borderColor: rgb(0, 0, 0),
+});
+for (let i = 5; i >= 1; i--) {
+  page1.drawLine({
+    start: {
+      x: 25,
+      y: 25 + (calendarHeight / 6) * i,
+    },
+    end: {
+      x: width / 2,
+      y: 25 + (calendarHeight / 6) * i,
+    },
+    thickness: 1,
+    color: rgb(0, 0, 0),
+  });
+}
+for (let i = 1; i <= 3; i++) {
+  page1.drawLine({
+    start: {
+      x: 25 + ((width / 2 - 25) / 4) * i,
+      y: height - 75,
+    },
+    end: {
+      x: 25 + ((width / 2 - 25) / 4) * i,
+      y: 25,
+    },
+  });
+}
 
 const text1 = "1";
 page1.drawText(text1, {
