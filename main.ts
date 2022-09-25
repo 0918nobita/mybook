@@ -1,9 +1,10 @@
 import {
-  PageSizes,
   PDFDocument,
   rgb,
 } from "https://cdn.skypack.dev/pdf-lib@%5E1.17.1?dts";
 import fontkit from "https://cdn.skypack.dev/@pdf-lib/fontkit@1.1.1?dts";
+
+import { FourPages, renderFourPages } from "./lib.ts";
 
 const pdfDoc = await PDFDocument.create();
 
@@ -15,15 +16,73 @@ const font = await pdfDoc.embedFont(
 
 pdfDoc.setTitle("Generated Document");
 
-const pageSize: [number, number] = [PageSizes.A4[1], PageSizes.A4[0]];
+const fourPages: FourPages = [
+  {
+    draw: (drawable) => {
+      const fontSize = 20;
+      const text = "手帳";
+      drawable.drawText(text, {
+        x: (drawable.width - font.widthOfTextAtSize(text, fontSize)) / 2,
+        y: (drawable.height - fontSize) / 2,
+        size: fontSize,
+        font,
+        color: rgb(0, 0, 0),
+      });
+    },
+  },
+  {
+    draw: (drawable) => {
+      const fontSize = 20;
+      drawable.drawText("９月", {
+        x: 20,
+        y: 20,
+        size: fontSize,
+        font,
+        color: rgb(0, 0, 0),
+      });
+      drawable.drawRectangle({
+        x: 20,
+        y: 60,
+        width: drawable.width - 20,
+        height: drawable.height - 80,
+        borderWidth: 1,
+        borderColor: rgb(0, 0, 0),
+      });
+    },
+  },
+  {
+    draw: (drawable) => {
+      drawable.drawRectangle({
+        x: 0,
+        y: 60,
+        width: drawable.width - 20,
+        height: drawable.height - 80,
+        borderWidth: 1,
+        borderColor: rgb(0, 0, 0),
+      });
+    },
+  },
+  {
+    draw: (drawable) => {
+      const fontSize = 20;
+      drawable.drawText("4ページ目", {
+        x: 20,
+        y: 20,
+        size: fontSize,
+        font,
+        color: rgb(0, 0, 0),
+      });
+    },
+  },
+];
 
-const page1 = pdfDoc.addPage(pageSize);
+renderFourPages(pdfDoc, fourPages, 20);
 
-const { width, height } = page1.getSize();
+const pdfBytes = await pdfDoc.save();
 
-const fontSize = 12;
-const color = rgb(0, 0, 0);
+await Deno.writeFile("out.pdf", pdfBytes);
 
+/*
 page1.drawText("4", {
   x: 12,
   y: 10,
@@ -32,7 +91,7 @@ page1.drawText("4", {
   color,
 });
 const titleFontSize = 20;
-page1.drawText("２月　February", {
+page1.drawText("２月 February", {
   x: 25,
   y: height - 25 - titleFontSize,
   font,
@@ -122,7 +181,4 @@ page2.drawText("Hello, world!", {
   size: fontSize,
   color,
 });
-
-const pdfBytes = await pdfDoc.save();
-
-await Deno.writeFile("out.pdf", pdfBytes);
+*/
